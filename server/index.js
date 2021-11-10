@@ -1,4 +1,5 @@
 const http = require('http');
+const path = require('path');
 const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
@@ -10,10 +11,6 @@ const Port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-
-app.get('/', (_, res) => {
-  res.status(200).send({Msg: 'Server is up and running.'});
-});
 
 io.on('connect', (socket) => {
   socket.on('join', ({name, room}, callback) => {
@@ -66,7 +63,7 @@ io.on('connect', (socket) => {
 //serve static assets in production
 if (process.env.NODE_ENV === 'production') {
   //set static folder
-  app.use(express.static('../client/build'));
+  app.use(express.static(path.join(__dirname, '../client/build')));
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
   });
